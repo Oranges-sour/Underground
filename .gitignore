@@ -1,0 +1,4 @@
+**/.vs
+**/Debug.win32
+**/Release.win32
+**/out
