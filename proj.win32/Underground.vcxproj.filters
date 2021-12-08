@@ -117,6 +117,9 @@
     <ClCompile Include="..\Classes\Weapon.cpp">
       <Filter>Base\Elems</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\EnemyHitPointBar.cpp">
+      <Filter>Base\Elems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -216,6 +219,9 @@
       <Filter>Base\Elems</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Weapon.h">
+      <Filter>Base\Elems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\EnemyHitPointBar.h">
       <Filter>Base\Elems</Filter>
     </ClInclude>
   </ItemGroup>
