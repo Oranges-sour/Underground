@@ -1,6 +1,7 @@
 #ifndef __RANDOM_H__
 #define __RANDOM_H__
 
+#include <memory>
 #include <random>
 #include <vector>
 
@@ -35,9 +36,9 @@ class rand_int {
 public:
     rand_int(int min, int max)
     {
-        r = new std::uniform_int_distribution<int>(min, max);
+        r = std::make_unique<std::uniform_int_distribution<int>>(min, max);
     }
-    ~rand_int() { delete r; }
+    ~rand_int() {}
     int operator()() const
     {
         auto& engine = Random::getEngine();
@@ -45,16 +46,16 @@ public:
     }
 
 private:
-    std::uniform_int_distribution<int>* r = nullptr;
+    std::unique_ptr<std::uniform_int_distribution<int>> r;
 };
 
 class rand_float {
 public:
     rand_float(float min, float max)
     {
-        r = new std::uniform_real_distribution<float>(min, max);
+        r = std::make_unique<std::uniform_real_distribution<float>>(min, max);
     }
-    ~rand_float() { delete r; }
+    ~rand_float() {}
     float operator()() const
     {
         auto& engine = Random::getEngine();
@@ -62,25 +63,35 @@ public:
     }
 
 private:
-    std::uniform_real_distribution<float>* r = nullptr;
+    std::unique_ptr<std::uniform_real_distribution<float>> r;
 };
 
 class rand_bool {
 public:
-    rand_bool() {}
+    rand_bool()
+    {
+        r = std::make_unique<std::uniform_int_distribution<int>>(0, 1);
+    }
     ~rand_bool() {}
     bool operator()() const
     {
-        static rand_int r(0, 1);
-        return static_cast<bool>(r());
+        auto& engine = Random::getEngine();
+        return static_cast<bool>((*r)(engine));
     }
+
+private:
+    std::unique_ptr<std::uniform_int_distribution<int>> r;
 };
 
 template <class T>
 class RandWithRate {
 public:
     struct Elem;
-    RandWithRate(const std::vector<Elem>& set) { this->set = set; }
+    RandWithRate(const std::vector<Elem>& set)
+    {
+        this->set = set;
+        check();
+    }
     ~RandWithRate() {}
     struct Elem {
         T value;
@@ -89,11 +100,14 @@ public:
     T operator()();
 
 private:
+    void check();
+
+private:
     std::vector<Elem> set;
 };
 
 template <class T>
-inline T RandWithRate<T>::operator()()
+void RandWithRate<T>::check()
 {
     int percent = 0;
     for (size_t x = 0; x < set.size(); ++x) {
@@ -101,7 +115,11 @@ inline T RandWithRate<T>::operator()()
     }
     //总百分比必须是100
     assert(percent == 100);
+}
 
+template <class T>
+inline T RandWithRate<T>::operator()()
+{
     static rand_int rand(1, 100);
     int randPercent = rand();
     int nowPercent = 0;
