@@ -143,35 +143,6 @@ void GameManager::mainUpdateAfterRender(float dt)
         sp->removeFromParent();
     }
     needToErase.clear();
-    //添加新的精灵
-    for (auto iter = needToAdd.begin(); iter != needToAdd.end(); ++iter) {
-        auto& sp = iter->first;
-        auto& type = sp->getGameSpriteType();
-
-        auto i = gameObjects.find(type);
-        if (i == gameObjects.end()) {
-            gameObjects.insert(make_pair(type, set<basic_GameSprite*>({sp})));
-        } else {
-            i->second.insert(sp);
-        }
-        gameRenderer->addNode(sp, static_cast<int>(iter->second));
-        //添加的时候retain了一次,现在release掉
-        sp->release();
-    }
-    needToAdd.clear();
-
-    //移除精灵
-    for (auto iter = needToErase.begin(); iter != needToErase.end(); ++iter) {
-        auto& sp = *iter;
-        auto& type = sp->getGameSpriteType();
-
-        auto i = gameObjects.find(type);
-        if (i != gameObjects.end()) {
-            i->second.erase(sp);
-        }
-        sp->removeFromParent();
-    }
-    needToErase.clear();
 }
 
 void GameManager::pauseGame()

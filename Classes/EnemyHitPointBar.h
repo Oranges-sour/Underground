@@ -10,7 +10,7 @@ class EnemyHitPointBar : public Node {
 public:
     static EnemyHitPointBar* create(basic_Enemy* enemy);
     bool init(basic_Enemy* enemy);
-    EnemyHitPointBar();
+    //EnemyHitPointBar();
     virtual ~EnemyHitPointBar() {}
 
 private:

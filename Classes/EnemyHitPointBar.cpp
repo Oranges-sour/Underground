@@ -10,3 +10,8 @@ EnemyHitPointBar* EnemyHitPointBar::create(basic_Enemy* enemy)
 	CC_SAFE_DELETE(b);
 	return nullptr;
 }
+
+bool EnemyHitPointBar::init(basic_Enemy* enemy)
+{
+	return false;
+}
